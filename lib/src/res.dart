@@ -1,8 +1,11 @@
+import 'package:flutter/foundation.dart';
+
 /// A minimal functional Result type for Dart.
 ///
 /// Inspired by Rust / Kotlin Result.
 ///
 /// Represents either a [Success] or an [Error].
+@immutable
 sealed class Res<E, T> {
   const Res();
 
@@ -168,7 +171,7 @@ sealed class Res<E, T> {
     Future<Res<E, R>> Function(T value) fn,
   ) async {
     if (this is Success<E, T>) {
-      return await fn((this as Success<E, T>).value);
+      return fn((this as Success<E, T>).value);
     }
     return Res.error((this as Error<E, T>).error);
   }
@@ -341,9 +344,8 @@ sealed class Res<E, T> {
 // =========================
 
 final class Success<E, T> extends Res<E, T> {
-  final T value;
-
   const Success(this.value);
+  final T value;
 
   @override
   String toString() => 'Success($value)';
@@ -357,10 +359,9 @@ final class Success<E, T> extends Res<E, T> {
 }
 
 final class Error<E, T> extends Res<E, T> {
+  const Error(this.error);
   @override
   final E error;
-
-  const Error(this.error);
 
   @override
   String toString() => 'Error($error)';

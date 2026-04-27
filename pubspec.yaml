@@ -1,7 +1,10 @@
 name: simply_result
-description: "A new Flutter package project."
-version: 0.0.1
-homepage:
+description: A lightweight Result type for Dart with functional helpers, async support, and zero dependencies.
+version: 1.0.0
+
+homepage: https://github.com/munhozfontana/simply_result
+repository: https://github.com/munhozfontana/simply_result
+issue_tracker: https://github.com/munhozfontana/simply_result/issues
 
 environment:
   sdk: ^3.11.3
@@ -16,6 +19,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  very_good_analysis: ^5.1.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

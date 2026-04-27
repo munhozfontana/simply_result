@@ -2,9 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:simply_result/simply_result.dart';
 
 void main() {
+  // ========================
+  // Constructors
+  // ========================
+
   group('constructors', () {
     test('success constructor', () {
-      final r = Res<String, int>.success(10);
+      const r = Res<String, int>.success(10);
 
       expect(r.isSuccess, true);
       expect(r.isError, false);
@@ -13,7 +17,7 @@ void main() {
     });
 
     test('error constructor', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       expect(r.isSuccess, false);
       expect(r.isError, true);
@@ -28,9 +32,13 @@ void main() {
     });
   });
 
+  // ========================
+  // Core
+  // ========================
+
   group('when / fold', () {
     test('when success', () {
-      final r = Res<String, int>.success(2);
+      const r = Res<String, int>.success(2);
 
       final v = r.when(success: (v) => v * 2, error: (_) => 0);
 
@@ -38,7 +46,7 @@ void main() {
     });
 
     test('when error', () {
-      final r = Res<String, int>.error('err');
+      const r = Res<String, int>.error('err');
 
       final v = r.when(success: (v) => v * 2, error: (_) => 5);
 
@@ -46,7 +54,7 @@ void main() {
     });
 
     test('fold success', () {
-      final r = Res<String, int>.success(3);
+      const r = Res<String, int>.success(3);
 
       final v = r.fold((v) => v + 1, (_) => 0);
 
@@ -54,7 +62,7 @@ void main() {
     });
 
     test('fold error', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       final v = r.fold((_) => 0, (_) => 9);
 
@@ -62,9 +70,13 @@ void main() {
     });
   });
 
+  // ========================
+  // Transform
+  // ========================
+
   group('map', () {
     test('map success', () {
-      final r = Res<String, int>.success(2);
+      const r = Res<String, int>.success(2);
 
       final m = r.map((v) => v * 5);
 
@@ -72,7 +84,7 @@ void main() {
     });
 
     test('map error', () {
-      final r = Res<String, int>.error('err');
+      const r = Res<String, int>.error('err');
 
       final m = r.map((v) => v * 5);
 
@@ -82,7 +94,7 @@ void main() {
 
   group('mapError', () {
     test('mapError transforms error', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       final m = r.mapError((e) => 'mapped:$e');
 
@@ -90,7 +102,7 @@ void main() {
     });
 
     test('mapError ignored on success', () {
-      final r = Res<String, int>.success(7);
+      const r = Res<String, int>.success(7);
 
       final m = r.mapError((e) => 'mapped:$e');
 
@@ -100,7 +112,7 @@ void main() {
 
   group('andThen', () {
     test('andThen success', () {
-      final r = Res<String, int>.success(2);
+      const r = Res<String, int>.success(2);
 
       final res = r.andThen((v) => Res.success(v * 3));
 
@@ -108,7 +120,7 @@ void main() {
     });
 
     test('andThen error', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       final res = r.andThen((v) => Res.success(v * 3));
 
@@ -116,9 +128,13 @@ void main() {
     });
   });
 
+  // ========================
+  // Mapping helpers
+  // ========================
+
   group('mapOr / mapOrElse', () {
     test('mapOr success', () {
-      final r = Res<String, int>.success(4);
+      const r = Res<String, int>.success(4);
 
       final v = r.mapOr(0, (v) => v * 2);
 
@@ -126,7 +142,7 @@ void main() {
     });
 
     test('mapOr fallback', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       final v = r.mapOr(9, (v) => v * 2);
 
@@ -134,7 +150,7 @@ void main() {
     });
 
     test('mapOrElse success', () {
-      final r = Res<String, int>.success(3);
+      const r = Res<String, int>.success(3);
 
       final v = r.mapOrElse((_) => 0, (v) => v * 4);
 
@@ -142,7 +158,7 @@ void main() {
     });
 
     test('mapOrElse error', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       final v = r.mapOrElse((_) => 99, (v) => v * 4);
 
@@ -150,9 +166,13 @@ void main() {
     });
   });
 
+  // ========================
+  // Filters
+  // ========================
+
   group('filter', () {
     test('filter pass', () {
-      final r = Res<String, int>.success(10);
+      const r = Res<String, int>.success(10);
 
       final res = r.filter((v) => v > 5, 'bad');
 
@@ -160,7 +180,7 @@ void main() {
     });
 
     test('filter fail', () {
-      final r = Res<String, int>.success(2);
+      const r = Res<String, int>.success(2);
 
       final res = r.filter((v) => v > 5, 'bad');
 
@@ -168,7 +188,7 @@ void main() {
     });
 
     test('filter ignored on error', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       final res = r.filter((v) => true, 'bad');
 
@@ -178,35 +198,39 @@ void main() {
 
   group('exists / contains', () {
     test('exists true', () {
-      final r = Res<String, int>.success(5);
+      const r = Res<String, int>.success(5);
 
       expect(r.exists((v) => v == 5), true);
     });
 
     test('exists false', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       expect(r.exists((v) => true), false);
     });
 
     test('contains true', () {
-      final r = Res<String, int>.success(7);
+      const r = Res<String, int>.success(7);
 
       expect(r.contains(7), true);
     });
 
     test('contains false', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       expect(r.contains(7), false);
     });
   });
 
+  // ========================
+  // Side effects
+  // ========================
+
   group('tap / tapError', () {
     test('tap success', () {
-      int captured = 0;
+      var captured = 0;
 
-      Res<String, int>.success(8).tap((v) {
+      const Res<String, int>.success(8).tap((v) {
         captured = v;
       });
 
@@ -216,7 +240,7 @@ void main() {
     test('tapError', () {
       String? captured;
 
-      Res<String, int>.error('fail').tapError((e) {
+      const Res<String, int>.error('fail').tapError((e) {
         captured = e;
       });
 
@@ -224,21 +248,25 @@ void main() {
     });
   });
 
+  // ========================
+  // Recovery
+  // ========================
+
   group('recovery', () {
     test('getOrElse success', () {
-      final r = Res<String, int>.success(10);
+      const r = Res<String, int>.success(10);
 
       expect(r.getOrElse((_) => 0), 10);
     });
 
     test('getOrElse fallback', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       expect(r.getOrElse((_) => 7), 7);
     });
 
     test('recover', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       final res = r.recover((_) => 3);
 
@@ -246,9 +274,13 @@ void main() {
     });
   });
 
+  // ========================
+  // Async
+  // ========================
+
   group('async', () {
     test('mapAsync success', () async {
-      final r = Res<String, int>.success(5);
+      const r = Res<String, int>.success(5);
 
       final res = await r.mapAsync((v) async => v * 2);
 
@@ -256,7 +288,7 @@ void main() {
     });
 
     test('mapAsync error', () async {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       final res = await r.mapAsync((v) async => v * 2);
 
@@ -264,13 +296,17 @@ void main() {
     });
 
     test('flatMapAsync', () async {
-      final r = Res<String, int>.success(5);
+      const r = Res<String, int>.success(5);
 
       final res = await r.flatMapAsync((v) async => Res.success(v * 3));
 
       expect(res.success, 15);
     });
   });
+
+  // ========================
+  // Try
+  // ========================
 
   group('try', () {
     test('tryCatch success', () {
@@ -304,6 +340,10 @@ void main() {
     });
   });
 
+  // ========================
+  // Guards
+  // ========================
+
   group('guards', () {
     test('fromNullable success', () {
       final r = Res.fromNullable<String, int>(5, 'err');
@@ -330,9 +370,16 @@ void main() {
     });
   });
 
+  // ========================
+  // Collections
+  // ========================
+
   group('collections', () {
     test('combine success', () {
-      final list = [Res<String, int>.success(1), Res<String, int>.success(2)];
+      final list = [
+        const Res<String, int>.success(1),
+        const Res<String, int>.success(2),
+      ];
 
       final r = Res.combine(list);
 
@@ -341,8 +388,8 @@ void main() {
 
     test('combine error', () {
       final list = [
-        Res<String, int>.success(1),
-        Res<String, int>.error('fail'),
+        const Res<String, int>.success(1),
+        const Res<String, int>.error('fail'),
       ];
 
       final r = Res.combine(list);
@@ -352,8 +399,8 @@ void main() {
 
     test('sequence', () async {
       final list = [
-        Future.value(Res<String, int>.success(1)),
-        Future.value(Res<String, int>.success(2)),
+        Future.value(const Res<String, int>.success(1)),
+        Future.value(const Res<String, int>.success(2)),
       ];
 
       final r = await Res.sequence(list);
@@ -372,11 +419,15 @@ void main() {
     });
   });
 
+  // ========================
+  // Zip
+  // ========================
+
   group('zip', () {
     test('zip success', () {
       final r = Res.zip(
-        Res<String, int>.success(1),
-        Res<String, int>.success(2),
+        const Res<String, int>.success(1),
+        const Res<String, int>.success(2),
       );
 
       expect(r.success, (1, 2));
@@ -384,8 +435,8 @@ void main() {
 
     test('zip error', () {
       final r = Res.zip(
-        Res<String, int>.error('fail'),
-        Res<String, int>.success(2),
+        const Res<String, int>.error('fail'),
+        const Res<String, int>.success(2),
       );
 
       expect(r.error, 'fail');
@@ -393,9 +444,9 @@ void main() {
 
     test('zip3', () {
       final r = Res.zip3(
-        Res<String, int>.success(1),
-        Res<String, int>.success(2),
-        Res<String, int>.success(3),
+        const Res<String, int>.success(1),
+        const Res<String, int>.success(2),
+        const Res<String, int>.success(3),
       );
 
       expect(r.success, (1, 2, 3));
@@ -403,39 +454,54 @@ void main() {
 
     test('zip4', () {
       final r = Res.zip4(
-        Res<String, int>.success(1),
-        Res<String, int>.success(2),
-        Res<String, int>.success(3),
-        Res<String, int>.success(4),
+        const Res<String, int>.success(1),
+        const Res<String, int>.success(2),
+        const Res<String, int>.success(3),
+        const Res<String, int>.success(4),
       );
 
       expect(r.success, (1, 2, 3, 4));
     });
   });
 
+  // ========================
+  // Flatten
+  // ========================
+
   group('flatten', () {
     test('flatten success', () {
-      final r = Res.flatten<String, int>(Res.success(Res.success(5)));
+      final r = Res.flatten<String, int>(const Res.success(Res.success(5)));
 
       expect(r.success, 5);
     });
 
     test('flatten error', () {
-      final r = Res.flatten<String, int>(Res.error('fail'));
+      final r = Res.flatten<String, int>(const Res.error('fail'));
 
       expect(r.error, 'fail');
     });
   });
 
+  // ========================
+  // Equality
+  // ========================
+
   group('equality', () {
     test('success equality', () {
-      expect(Success<String, int>(5), Success<String, int>(5));
+      expect(const Success<String, int>(5), const Success<String, int>(5));
     });
 
     test('error equality', () {
-      expect(Error<String, int>('fail'), Error<String, int>('fail'));
+      expect(
+        const Error<String, int>('fail'),
+        const Error<String, int>('fail'),
+      );
     });
   });
+
+  // ========================
+  // Global helpers
+  // ========================
 
   group('global helpers', () {
     test('success helper', () {
@@ -457,23 +523,27 @@ void main() {
     });
   });
 
+  // ========================
+  // Extra coverage
+  // ========================
+
   group('extra coverage', () {
     test('toNullable success', () {
-      final r = Res<String, int>.success(5);
+      const r = Res<String, int>.success(5);
 
       expect(r.toNullable(), 5);
     });
 
     test('toNullable error', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       expect(r.toNullable(), null);
     });
 
     test('tap ignored on error', () {
-      int captured = 0;
+      var captured = 0;
 
-      Res<String, int>.error('fail').tap((v) {
+      const Res<String, int>.error('fail').tap((v) {
         captured = v;
       });
 
@@ -483,7 +553,7 @@ void main() {
     test('tapError ignored on success', () {
       String? captured;
 
-      Res<String, int>.success(5).tapError((e) {
+      const Res<String, int>.success(5).tapError((e) {
         captured = e;
       });
 
@@ -491,19 +561,19 @@ void main() {
     });
 
     test('exists false on success', () {
-      final r = Res<String, int>.success(5);
+      const r = Res<String, int>.success(5);
 
       expect(r.exists((v) => v > 10), false);
     });
 
     test('contains false on success', () {
-      final r = Res<String, int>.success(5);
+      const r = Res<String, int>.success(5);
 
       expect(r.contains(10), false);
     });
 
     test('flatMapAsync error path', () async {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       final res = await r.flatMapAsync((v) async {
         return Res.success(v * 2);
@@ -514,9 +584,9 @@ void main() {
 
     test('sequence stops on error', () async {
       final list = [
-        Future.value(Res<String, int>.success(1)),
-        Future.value(Res<String, int>.error('fail')),
-        Future.value(Res<String, int>.success(3)),
+        Future.value(const Res<String, int>.success(1)),
+        Future.value(const Res<String, int>.error('fail')),
+        Future.value(const Res<String, int>.success(3)),
       ];
 
       final res = await Res.sequence(list);
@@ -526,7 +596,7 @@ void main() {
 
     test('traverse error', () async {
       final res = await Res.traverse<String, int, int>([1, 2, 3], (v) async {
-        if (v == 2) return Res.error('fail');
+        if (v == 2) return const Res.error('fail');
         return Res.success(v);
       });
 
@@ -535,9 +605,9 @@ void main() {
 
     test('zip3 error precedence', () {
       final r = Res.zip3(
-        Res<String, int>.success(1),
-        Res<String, int>.error('fail'),
-        Res<String, int>.success(3),
+        const Res<String, int>.success(1),
+        const Res<String, int>.error('fail'),
+        const Res<String, int>.success(3),
       );
 
       expect(r.error, 'fail');
@@ -545,41 +615,41 @@ void main() {
 
     test('zip4 error precedence', () {
       final r = Res.zip4(
-        Res<String, int>.success(1),
-        Res<String, int>.success(2),
-        Res<String, int>.error('fail'),
-        Res<String, int>.success(4),
+        const Res<String, int>.success(1),
+        const Res<String, int>.success(2),
+        const Res<String, int>.error('fail'),
+        const Res<String, int>.success(4),
       );
 
       expect(r.error, 'fail');
     });
 
     test('flatten success containing error', () {
-      final r = Res.flatten<String, int>(Res.success(Res.error('fail')));
+      final r = Res.flatten<String, int>(const Res.success(Res.error('fail')));
 
       expect(r.error, 'fail');
     });
 
     test('toString success', () {
-      final r = Res<String, int>.success(5);
+      const r = Res<String, int>.success(5);
 
       expect(r.toString(), 'Success(5)');
     });
 
     test('toString error', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       expect(r.toString(), 'Error(fail)');
     });
 
     test('hashCode success', () {
-      final r = Res<String, int>.success(5);
+      const r = Res<String, int>.success(5);
 
       expect(r.hashCode, isA<int>());
     });
 
     test('hashCode error', () {
-      final r = Res<String, int>.error('fail');
+      const r = Res<String, int>.error('fail');
 
       expect(r.hashCode, isA<int>());
     });
