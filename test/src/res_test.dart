@@ -508,6 +508,15 @@ void main() {
       expect(r.error, 'fail');
     });
 
+    test('last', () {
+      final r = Res.zip(
+        const Res<String, int>.success(2),
+        const Res<String, int>.error('fail'),
+      );
+
+      expect(r.error, 'fail');
+    });
+
     test('zip3', () {
       final r = Res.zip3(
         const Res<String, int>.success(1),
@@ -516,6 +525,15 @@ void main() {
       );
 
       expect(r.success, (1, 2, 3));
+    });
+
+    test('zip3 error last', () {
+      final r = Res.zip3(
+        const Res<String, int>.success(1),
+        const Res<String, int>.success(2),
+        const Res<String, int>.error('fail'),
+      );
+      expect(r.error, 'fail');
     });
 
     test('zip4', () {
@@ -685,6 +703,17 @@ void main() {
         const Res<String, int>.success(2),
         const Res<String, int>.error('fail'),
         const Res<String, int>.success(4),
+      );
+
+      expect(r.error, 'fail');
+    });
+
+    test('zip4 error last', () {
+      final r = Res.zip4(
+        const Res<String, int>.success(1),
+        const Res<String, int>.success(2),
+        const Res<String, int>.success(3),
+        const Res<String, int>.error('fail'),
       );
 
       expect(r.error, 'fail');

@@ -727,7 +727,7 @@ sealed class Res<E, T> {
   ///   Res.success("a"),
   ///   Res.success(true),
   /// );
-  /// // Success((1, "a", true))
+  /// Success((1, "a", true))
   /// ```
   static Res<E, (A, B, C)> zip3<E, A, B, C>(
     Res<E, A> a,
