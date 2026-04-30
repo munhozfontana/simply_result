@@ -419,6 +419,72 @@ void main() {
     });
   });
 
+  group('parallel', () {
+    test('returns success with all values when everything succeeds', () async {
+      final futures = [
+        Future.value(const Res<int, int>.success(1)),
+        Future.value(const Res<int, int>.success(2)),
+        Future.value(const Res<int, int>.success(3)),
+      ];
+
+      final result = await Res.parallel(futures);
+
+      expect(result is Success<int, List<int>>, true);
+      expect((result as Success).value, [1, 2, 3]);
+    });
+
+    test('returns error when any future fails', () async {
+      final futures = [
+        Future.value(const Res<String, int>.success(1)),
+        Future.value(const Res<String, int>.error('error')),
+        Future.value(const Res<String, int>.success(3)),
+      ];
+
+      final result = await Res.parallel<String, int>(futures);
+
+      expect(result is Error<String, List<int>>, true);
+      expect((result as Error).error, 'error');
+    });
+
+    test('returns success with an empty list', () async {
+      final futures = <Future<Res<String, int>>>[];
+
+      final result = await Res.parallel<String, int>(futures);
+
+      expect(result is Success<String, List<int>>, true);
+      expect((result as Success).value, isEmpty);
+    });
+
+    test('runs in parallel (not sequentially)', () async {
+      final start = DateTime.now();
+
+      final futures = [
+        Future.delayed(
+          const Duration(milliseconds: 100),
+          () => const Res<String, int>.success(1),
+        ),
+        Future.delayed(
+          const Duration(milliseconds: 100),
+          () => const Res<String, int>.success(2),
+        ),
+        Future.delayed(
+          const Duration(milliseconds: 100),
+          () => const Res<String, int>.success(3),
+        ),
+      ];
+
+      final result = await Res.parallel<String, int>(futures);
+
+      final elapsed = DateTime.now().difference(start);
+
+      // If it were sequential it would take ~300ms
+      // Parallel execution should be close to ~100ms
+      expect(elapsed.inMilliseconds < 200, true);
+
+      expect(result is Success<String, List<int>>, true);
+      expect(result.success?.length, 3);
+    });
+  });
   // ========================
   // Zip
   // ========================

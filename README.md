@@ -1,3 +1,4 @@
+
 # simply_result
 
 A lightweight Result type for Dart.
@@ -27,19 +28,50 @@ Quick dictionary of all helpers available in **simply_result**.
   - [API Index](#api-index)
   - [Installation](#installation)
   - [API](#api)
-  - [`success(value)`](#successvalue)
-  - [`error(err)`](#errorerr)
-  - [`map`](#map)
-  - [`flatMap`](#flatmap)
-  - [`mapError`](#maperror)
-  - [`fold`](#fold)
-  - [`getOrElse`](#getorelse)
-  - [`zip`](#zip)
-  - [`zip3`](#zip3)
-  - [`mapAsync`](#mapasync)
-  - [`flatMapAsync`](#flatmapasync)
-  - [`pipe`](#pipe)
-  - [`Res.unit()`](#resunit)
+  - [Constructors](#constructors)
+    - [`success(value)`](#successvalue)
+    - [`error(err)`](#errorerr)
+    - [`Res.unit()`](#resunit)
+  - [Core](#core)
+    - [`map`](#map)
+    - [`flatMap`](#flatmap)
+    - [`mapError`](#maperror)
+    - [`fold`](#fold)
+  - [Recovery](#recovery)
+    - [`getOrElse`](#getorelse)
+    - [`recover`](#recover)
+  - [Async](#async)
+    - [`mapAsync`](#mapasync)
+    - [`flatMapAsync`](#flatmapasync)
+  - [Side effects](#side-effects)
+    - [`tap`](#tap)
+    - [`tapError`](#taperror)
+  - [Mapping helpers](#mapping-helpers)
+    - [`mapOr`](#mapor)
+    - [`mapOrElse`](#maporelse)
+  - [Filters](#filters)
+    - [`filter`](#filter)
+    - [`exists`](#exists)
+    - [`contains`](#contains)
+  - [Conversions](#conversions)
+    - [`toNullable`](#tonullable)
+  - [Try](#try)
+    - [`tryCatch`](#trycatch)
+    - [`asyncTry`](#asynctry)
+  - [Guards](#guards)
+    - [`fromNullable`](#fromnullable)
+    - [`fromBool`](#frombool)
+  - [Collections](#collections)
+    - [`combine`](#combine)
+    - [`sequence`](#sequence)
+    - [`parallel`](#parallel)
+    - [`traverse`](#traverse)
+  - [Zip](#zip)
+    - [`zip`](#zip-1)
+    - [`zip3`](#zip3)
+    - [`zip4`](#zip4)
+  - [Advanced](#advanced)
+    - [`flatten`](#flatten)
 
 ## Installation
 
@@ -50,7 +82,11 @@ dependencies:
 
 ## API
 
-## `success(value)`
+---
+
+## Constructors
+
+### `success(value)`
 
 Creates a **successful result** containing a value.
 
@@ -65,7 +101,7 @@ print(result);
 
 ---
 
-## `error(err)`
+### `error(err)`
 
 Creates a **failed result** containing an error.
 
@@ -80,7 +116,23 @@ print(result);
 
 ---
 
-## `map`
+### `Res.unit()`
+
+Creates a success result containing `null`.
+Useful when the operation has **no meaningful return value**.
+
+```dart
+final result = Res.unit();
+
+print(result);
+// → Success(null)
+```
+
+---
+
+## Core
+
+### `map`
 
 Transforms the value **only if the result is `Success`**.
 If the result is `Error`, it is propagated unchanged.
@@ -105,7 +157,7 @@ print(result);
 
 ---
 
-## `flatMap`
+### `flatMap`
 
 Chains operations that **also return a `Res`**.
 
@@ -131,7 +183,7 @@ print(result);
 
 ---
 
-## `mapError`
+### `mapError`
 
 Transforms the **error value** without touching the success value.
 
@@ -145,14 +197,14 @@ print(result);
 
 ---
 
-## `fold`
+### `fold`
 
 Handles **both success and error cases**, returning a single value.
 
 ```dart
 final result = success(10).fold(
-  (err) => "Error: $err",
   (value) => "Value: $value",
+  (err) => "Error: $err",
 );
 
 print(result);
@@ -163,8 +215,8 @@ With error:
 
 ```dart
 final result = error("fail").fold(
-  (err) => "Error: $err",
   (value) => "Value: $value",
+  (err) => "Error: $err",
 );
 
 print(result);
@@ -173,13 +225,15 @@ print(result);
 
 ---
 
-## `getOrElse`
+## Recovery
+
+### `getOrElse`
 
 Returns the value if success, otherwise returns a **fallback**.
 
 ```dart
 final value = success(10)
-    .getOrElse(() => 0);
+    .getOrElse((_) => 0);
 
 print(value);
 // → 10
@@ -189,7 +243,7 @@ With error:
 
 ```dart
 final value = error("fail")
-    .getOrElse(() => 0);
+    .getOrElse((_) => 0);
 
 print(value);
 // → 0
@@ -197,57 +251,20 @@ print(value);
 
 ---
 
-## `zip`
+### `recover`
 
-Combines **two results** into one.
-
-If any result is `Error`, the first error is returned.
+Transforms an error into success.
 
 ```dart
-final result = Res.zip(
-  success(2),
-  success(3),
-  (a, b) => a + b,
-);
-
-print(result);
-// → Success(5)
-```
-
-With error:
-
-```dart
-final result = Res.zip(
-  success(2),
-  error("fail"),
-  (a, b) => a + b,
-);
-
-print(result);
-// → Error(fail)
+final result = error("fail")
+    .recover((_) => 42);
 ```
 
 ---
 
-## `zip3`
+## Async
 
-Combines **three results**.
-
-```dart
-final result = Res.zip3(
-  success(2),
-  success(3),
-  success(5),
-  (a, b, c) => a + b + c,
-);
-
-print(result);
-// → Success(10)
-```
-
----
-
-## `mapAsync`
+### `mapAsync`
 
 Asynchronous version of `map`.
 
@@ -261,7 +278,7 @@ print(result);
 
 ---
 
-## `flatMapAsync`
+### `flatMapAsync`
 
 Asynchronous version of `flatMap`.
 
@@ -275,28 +292,263 @@ print(result);
 
 ---
 
-## `pipe`
+## Side effects
 
-Allows chaining transformations in a **functional pipeline style**.
+### `tap`
+
+Executes side-effect on success.
 
 ```dart
-final result = success(5)
-    .pipe((r) => r.map((v) => v * 2));
-
-print(result);
-// → Success(10)
+success(10).tap(print);
 ```
 
 ---
 
-## `Res.unit()`
+### `tapError`
 
-Creates a success result containing `null`.
-Useful when the operation has **no meaningful return value**.
+Executes side-effect on error.
 
 ```dart
-final result = Res.unit();
+error("fail").tapError(print);
+```
+
+---
+
+## Mapping helpers
+
+### `mapOr`
+
+Returns a fallback if `Error`.
+
+```dart
+final result = error("fail")
+    .mapOr(0, (v) => v * 2);
+```
+
+---
+
+### `mapOrElse`
+
+Lazy fallback for `Error`.
+
+```dart
+final result = error("fail")
+    .mapOrElse(
+      (e) => -1,
+      (v) => v * 2,
+    );
+```
+
+---
+
+## Filters
+
+### `filter`
+
+Fails if predicate does not match.
+
+```dart
+final result = success(10)
+    .filter((v) => v > 5, "too small");
+```
+
+---
+
+### `exists`
+
+Checks predicate on success.
+
+```dart
+success(10).exists((v) => v > 5);
+```
+
+---
+
+### `contains`
+
+Checks equality on success.
+
+```dart
+success(10).contains(10);
+```
+
+---
+
+## Conversions
+
+### `toNullable`
+
+Converts to nullable value.
+
+```dart
+success(10).toNullable(); // 10
+error("fail").toNullable(); // null
+```
+
+---
+
+## Try
+
+### `tryCatch`
+
+Wraps sync code.
+
+```dart
+final result = Res.tryCatch(
+  () => int.parse("10"),
+  (e, _) => e.toString(),
+);
+```
+
+---
+
+### `asyncTry`
+
+Wraps async code.
+
+```dart
+final result = await Res.asyncTry(
+  () async => 10,
+  (e, _) => e.toString(),
+);
+```
+
+---
+
+## Guards
+
+### `fromNullable`
+
+Creates result from nullable.
+
+```dart
+final result = Res.fromNullable(null, "error");
+```
+
+---
+
+### `fromBool`
+
+Creates result from condition.
+
+```dart
+final result = Res.fromBool(false, "fail");
+```
+
+---
+
+## Collections
+
+### `combine`
+
+Combines multiple results.
+
+```dart
+final result = Res.combine([
+  success(1),
+  success(2),
+]);
+```
+
+---
+
+### `sequence`
+
+Runs futures sequentially.
+
+```dart
+final result = await Res.sequence([
+  Future.value(success(1)),
+  Future.value(success(2)),
+]);
+```
+
+---
+
+### `parallel`
+
+Runs futures in parallel.
+
+```dart
+final result = await Res.parallel([
+  Future.value(success(1)),
+  Future.value(success(2)),
+]);
+```
+
+---
+
+### `traverse`
+
+Maps and sequences.
+
+```dart
+final result = await Res.traverse(
+  [1, 2, 3],
+  (n) async => success(n * 2),
+);
+```
+
+---
+
+## Zip
+
+### `zip`
+
+Combines **two results** into one.
+
+```dart
+final result = Res.zip(
+  success(2),
+  success(3),
+);
 
 print(result);
-// → Success(null)
+// → Success((2, 3))
+```
+
+---
+
+### `zip3`
+
+Combines **three results**.
+
+```dart
+final result = Res.zip3(
+  success(2),
+  success(3),
+  success(5),
+);
+
+print(result);
+// → Success((2, 3, 5))
+```
+
+---
+
+### `zip4`
+
+Combines four results.
+
+```dart
+final result = Res.zip4(
+  success(1),
+  success(2),
+  success(3),
+  success(4),
+);
+```
+
+---
+
+## Advanced
+
+### `flatten`
+
+Flattens nested results.
+
+```dart
+final result = Res.flatten(
+  success(success(10)),
+);
 ```
