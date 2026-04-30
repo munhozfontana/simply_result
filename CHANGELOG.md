@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.1
+
+### ♻️ Improved
+
+- Update tests
+- add example
+
 ## 1.1.0
 
 ### ✨ Added
