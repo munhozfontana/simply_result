@@ -249,7 +249,9 @@ sealed class Res<E, T> {
   Res<E, T> filter(bool Function(T value) predicate, E err) {
     if (this is Success<E, T>) {
       final v = (this as Success<E, T>).value;
-      if (predicate(v)) return this;
+      if (predicate(v)) {
+        return this;
+      }
       return Res.error(err);
     }
     return this;
@@ -365,7 +367,9 @@ sealed class Res<E, T> {
   /// Res.error("fail").recover((_) => 0);
   /// ```
   Res<E, T> recover(T Function(E error) fn) {
-    if (this is Success<E, T>) return this;
+    if (this is Success<E, T>) {
+      return this;
+    }
     return Res.success(fn((this as Error<E, T>).error));
   }
 
@@ -498,7 +502,9 @@ sealed class Res<E, T> {
   /// Res.fromNullable(null, "error");
   /// ```
   static Res<E, T> fromNullable<E, T>(T? value, E err) {
-    if (value == null) return Res.error(err);
+    if (value == null) {
+      return Res.error(err);
+    }
     return Res.success(value);
   }
 
@@ -517,7 +523,9 @@ sealed class Res<E, T> {
   /// Res.fromBool(1 > 0, "error");
   /// ```
   static Res<E, void> fromBool<E>(bool condition, E err) {
-    if (condition) return Res.unit();
+    if (condition) {
+      return Res.unit();
+    }
     return Res.error(err);
   }
 
@@ -702,7 +710,9 @@ sealed class Res<E, T> {
     if (a is Success<E, A> && b is Success<E, B>) {
       return Res.success((a.value, b.value));
     }
-    if (a is Error<E, A>) return Res.error(a.error);
+    if (a is Error<E, A>) {
+      return Res.error(a.error);
+    }
     return Res.error((b as Error<E, B>).error);
   }
 
@@ -737,8 +747,12 @@ sealed class Res<E, T> {
     if (a is Success<E, A> && b is Success<E, B> && c is Success<E, C>) {
       return Res.success((a.value, b.value, c.value));
     }
-    if (a is Error<E, A>) return Res.error(a.error);
-    if (b is Error<E, B>) return Res.error(b.error);
+    if (a is Error<E, A>) {
+      return Res.error(a.error);
+    }
+    if (b is Error<E, B>) {
+      return Res.error(b.error);
+    }
     return Res.error((c as Error<E, C>).error);
   }
 
@@ -779,9 +793,15 @@ sealed class Res<E, T> {
         d is Success<E, D>) {
       return Res.success((a.value, b.value, c.value, d.value));
     }
-    if (a is Error<E, A>) return Res.error(a.error);
-    if (b is Error<E, B>) return Res.error(b.error);
-    if (c is Error<E, C>) return Res.error(c.error);
+    if (a is Error<E, A>) {
+      return Res.error(a.error);
+    }
+    if (b is Error<E, B>) {
+      return Res.error(b.error);
+    }
+    if (c is Error<E, C>) {
+      return Res.error(c.error);
+    }
     return Res.error((d as Error<E, D>).error);
   }
 
@@ -805,7 +825,9 @@ sealed class Res<E, T> {
   /// // Success(10)
   /// ```
   static Res<E, T> flatten<E, T>(Res<E, Res<E, T>> res) {
-    if (res is Success<E, Res<E, T>>) return res.value;
+    if (res is Success<E, Res<E, T>>) {
+      return res.value;
+    }
     return Res.error((res as Error<E, Res<E, T>>).error);
   }
 }

@@ -14,3 +14,4 @@ linter:
     sort_pub_dependencies: false
     avoid_returning_this: false
     unnecessary_library_directive: false
+    always_put_control_body_on_new_line: true

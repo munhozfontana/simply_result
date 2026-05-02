@@ -680,7 +680,9 @@ void main() {
 
     test('traverse error', () async {
       final res = await Res.traverse<String, int, int>([1, 2, 3], (v) async {
-        if (v == 2) return const Res.error('fail');
+        if (v == 2) {
+          return const Res.error('fail');
+        }
         return Res.success(v);
       });
 

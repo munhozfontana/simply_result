@@ -94,9 +94,12 @@ Use it when an operation completes correctly.
 
 ```dart
 final result = success(10);
+print(result); // → Success(10)
 
-print(result);
-// → Success(10)
+// or
+
+final result = Res.success(10)
+print(result); // → Success(10)
 ```
 
 ---
@@ -109,9 +112,12 @@ Useful for returning failures **without throwing exceptions**.
 
 ```dart
 final result = error("network failure");
+print(result); // → Error(network failure)
 
-print(result);
-// → Error(network failure)
+// or
+
+final result = Res.error("network failure");
+print(result); // → Error(network failure)
 ```
 
 ---
@@ -122,10 +128,10 @@ Creates a success result containing `null`.
 Useful when the operation has **no meaningful return value**.
 
 ```dart
-final result = Res.unit();
+final result = Res.unit(); 
+// Same as `Success(null) or success(null)`
 
-print(result);
-// → Success(null)
+print(result); // → Success(null)
 ```
 
 ---
@@ -253,12 +259,29 @@ print(value);
 
 ### `recover`
 
-Transforms an error into success.
+Transforms an error into a **success** by applying a recovery function.
+
+If the result is already a success, it is returned unchanged.
 
 ```dart
 final result = error("fail")
     .recover((_) => 42);
+
+print(result);
+// → Success(42)
 ```
+
+If the result is already a success:
+
+```dart
+final result = success(10)
+    .recover((_) => 42);
+
+print(result);
+// → Success(10)
+```
+
+Unlike `getOrElse`, this method keeps the value wrapped in `Res`.
 
 ---
 

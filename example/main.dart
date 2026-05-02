@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:your_package/your_package.dart';
 
 void main() async {
@@ -150,7 +151,7 @@ void constructors() {
 // COLLECTIONS
 // -------------------------
 
-void collections() async {
+Future<void> collections() async {
   final list = [Res.success<String, int>(1), Res.success<String, int>(2)];
 
   print(Res.combine(list));
