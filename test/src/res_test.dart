@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:simply_result/simply_result.dart';
+import 'package:test/test.dart';
 
 void main() {
   // ========================

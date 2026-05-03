@@ -1,11 +1,10 @@
-import 'package:flutter/foundation.dart';
-
 /// A minimal functional Result type for Dart.
 ///
 /// Inspired by Rust / Kotlin Result.
 ///
 /// Represents either a [Success] or an [Error].
-@immutable
+library;
+
 sealed class Res<E, T> {
   const Res();
 
