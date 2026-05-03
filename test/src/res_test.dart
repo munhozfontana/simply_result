@@ -486,11 +486,11 @@ void main() {
     });
   });
   // ========================
-  // Zip
+  // Zips
   // ========================
 
   group('zip', () {
-    test('zip success', () {
+    test('success', () {
       final r = Res.zip(
         const Res<String, int>.success(1),
         const Res<String, int>.success(2),
@@ -499,25 +499,24 @@ void main() {
       expect(r.success, (1, 2));
     });
 
-    test('zip error', () {
+    test('error at 1 position', () {
       final r = Res.zip(
         const Res<String, int>.error('fail'),
         const Res<String, int>.success(2),
       );
-
       expect(r.error, 'fail');
     });
 
-    test('last', () {
+    test('error at 2 position', () {
       final r = Res.zip(
-        const Res<String, int>.success(2),
+        const Res<String, int>.success(1),
         const Res<String, int>.error('fail'),
       );
-
       expect(r.error, 'fail');
     });
-
-    test('zip3', () {
+  });
+  group('zip3', () {
+    test('success', () {
       final r = Res.zip3(
         const Res<String, int>.success(1),
         const Res<String, int>.success(2),
@@ -527,7 +526,25 @@ void main() {
       expect(r.success, (1, 2, 3));
     });
 
-    test('zip3 error last', () {
+    test('error at 1 position', () {
+      final r = Res.zip3(
+        const Res<String, int>.error('fail'),
+        const Res<String, int>.success(2),
+        const Res<String, int>.success(3),
+      );
+      expect(r.error, 'fail');
+    });
+
+    test('error at 2 position', () {
+      final r = Res.zip3(
+        const Res<String, int>.success(1),
+        const Res<String, int>.error('fail'),
+        const Res<String, int>.success(3),
+      );
+      expect(r.error, 'fail');
+    });
+
+    test('error at 3 position', () {
       final r = Res.zip3(
         const Res<String, int>.success(1),
         const Res<String, int>.success(2),
@@ -535,8 +552,10 @@ void main() {
       );
       expect(r.error, 'fail');
     });
+  });
 
-    test('zip4', () {
+  group('zip4', () {
+    test('success', () {
       final r = Res.zip4(
         const Res<String, int>.success(1),
         const Res<String, int>.success(2),
@@ -545,6 +564,46 @@ void main() {
       );
 
       expect(r.success, (1, 2, 3, 4));
+    });
+
+    test('error at 1 position', () {
+      final r = Res.zip4(
+        const Res<String, int>.error('fail'),
+        const Res<String, int>.success(2),
+        const Res<String, int>.success(3),
+        const Res<String, int>.success(4),
+      );
+      expect(r.error, 'fail');
+    });
+
+    test('error at 2 position', () {
+      final r = Res.zip4(
+        const Res<String, int>.success(1),
+        const Res<String, int>.error('fail'),
+        const Res<String, int>.success(3),
+        const Res<String, int>.success(4),
+      );
+      expect(r.error, 'fail');
+    });
+
+    test('error at 3 position', () {
+      final r = Res.zip4(
+        const Res<String, int>.success(1),
+        const Res<String, int>.success(2),
+        const Res<String, int>.error('fail'),
+        const Res<String, int>.success(4),
+      );
+      expect(r.error, 'fail');
+    });
+
+    test('error at 4 position', () {
+      final r = Res.zip4(
+        const Res<String, int>.success(1),
+        const Res<String, int>.success(2),
+        const Res<String, int>.success(3),
+        const Res<String, int>.error('fail'),
+      );
+      expect(r.error, 'fail');
     });
   });
 

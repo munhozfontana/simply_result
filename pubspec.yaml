@@ -1,6 +1,6 @@
 name: simply_result
 description: A lightweight Result type for Dart with functional helpers, async support, and zero dependencies.
-version: 1.1.1
+version: 1.1.2
 
 homepage: https://github.com/munhozfontana/simply_result
 repository: https://github.com/munhozfontana/simply_result

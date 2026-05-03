@@ -1,0 +1,51 @@
+name: Dart Package CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Check formatting
+        run: dart format --set-exit-if-changed .
+
+      - name: Analyze
+        run: dart analyze
+
+      - name: Run tests with coverage
+        run: dart test --coverage=coverage
+
+      - name: Install lcov
+        run: sudo apt-get install -y lcov
+
+      - name: Show coverage
+        run: lcov --summary coverage/lcov.info
+
+      - name: Verify README coverage badge
+        run: |
+          ACTUAL=$(lcov --summary coverage/lcov.info 2>/dev/null | awk '/lines/ {print $2}' | tr -d '%')
+          README=$(grep -oP 'coverage-\K[0-9]+(\.[0-9]+)?(?=%25)' README.md)
+
+          echo "Actual coverage: $ACTUAL"
+          echo "README coverage: $README"
+
+          if [ "$ACTUAL" != "$README" ]; then
+            echo "Coverage badge in README is outdated"
+            exit 1
+          fi
+
+      - name: Pub publish dry-run
+        run: dart pub publish --dry-run
