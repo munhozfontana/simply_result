@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.0
+
+### ✨ Added
+
+- CI/CD workflows
+
+### ♻️ Tests
+
+- Arrive at 100% coverage
+
 ## 1.1.1
 
 ### ♻️ Improved
@@ -16,8 +26,6 @@
 ### ♻️ Improved
 
 - Documentation expanded across all APIs
-
----
 
 ## 1.0.0
 

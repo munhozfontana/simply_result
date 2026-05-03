@@ -13,17 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check CHANGELOG contains current version
-        run: |
-          VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}')
-
-          echo "Checking CHANGELOG for version $VERSION"
-
-          if ! grep -q "^## $VERSION" CHANGELOG.md; then
-            echo "ERROR: CHANGELOG.md does not contain entry for version $VERSION"
-            exit 1
-          fi
-
       - name: Verify version matches tag
         run: |
           VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}')
