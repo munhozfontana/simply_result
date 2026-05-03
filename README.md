@@ -4,7 +4,7 @@
 A lightweight Result type for Dart.
 
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
-![coverage](https://img.shields.io/badge/coverage-10%25-brightgreen)
+![coverage](https://img.shields.io/badge/coverage-100.0%25-brightgreen)
 
 ---
 
