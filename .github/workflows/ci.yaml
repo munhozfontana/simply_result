@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install lcov
+        run: sudo apt-get install -y lcov
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -28,8 +31,17 @@ jobs:
       - name: Run tests with coverage
         run: dart test --coverage=coverage
 
-      - name: Install lcov
-        run: sudo apt-get install -y lcov
+      - name: Install coverage tools
+        run: dart pub global activate coverage
+
+      - name: Convert coverage to lcov
+        run: |
+          format_coverage \
+            --lcov \
+            --in=coverage \
+            --out=coverage/lcov.info \
+            --packages=.dart_tool/package_config.json \
+            --report-on=lib
 
       - name: Show coverage
         run: lcov --summary coverage/lcov.info
